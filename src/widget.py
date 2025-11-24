@@ -37,4 +37,3 @@ def get_date(date_string: str) -> str:
     date_part = date_string.split('T')[0]
     year, month, day = date_part.split('-')
     return f"{day}.{month}.{year}"
-
