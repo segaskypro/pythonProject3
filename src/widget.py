@@ -1,4 +1,4 @@
-from src.masks import mask_card_number, mask_account
+from src.masks import mask_account, mask_card_number
 
 
 def mask_account_card(account_info: str) -> str:
@@ -37,3 +37,4 @@ def get_date(date_string: str) -> str:
     date_part = date_string.split('T')[0]
     year, month, day = date_part.split('-')
     return f"{day}.{month}.{year}"
+

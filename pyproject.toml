@@ -1,0 +1,9 @@
+﻿[tool.isort]
+profile = "black"
+multi_line_output = 3
+lines_after_imports = 2
+combine_as_imports = true
+
+[tool.mypy]
+python_version = "3.8"
+explicit_package_bases = true
