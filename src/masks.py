@@ -22,7 +22,7 @@ def mask_account(account_number: str) -> str:
     """
     Маскирует номер банковского счета.
 
-    Args:
+    Args:cat src/processing.py
         account_number (str): Номер счета
 
     Returns:
