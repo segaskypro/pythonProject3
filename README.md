@@ -34,6 +34,7 @@
 pip install -r requirements.txt
 
 from src.processing import filter_by_state, sort_by_date
+
 ** ИСПОЛЬЗОВАНИЕ ** 
 # Пример данных
 transactions = [
@@ -50,8 +51,10 @@ canceled_transactions = filter_by_state(transactions, 'CANCELED')  # Тольк�
 # Сортировка по дате
 newest_first = sort_by_date(transactions)  # По убыванию (новые сверху)
 oldest_first = sort_by_date(transactions, reverse=False)  # По возрастанию
+
 ** РАЗРАБОТКА **
 pip install flake8 mypy isort
+
 ** ПРОВЕРКА **
 # Проверка стиля
 flake8 src/
@@ -61,6 +64,7 @@ mypy src/
 
 # Сортировка импортов
 isort src/
+
 ** СТРУКТУРА ПРОЕКТА **
 project/
 ├── src/
