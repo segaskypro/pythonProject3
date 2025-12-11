@@ -1,28 +1,52 @@
 ﻿import pytest
+from masks import get_mask_card_number, get_mask_account
 
-from masks import get_mask_account, get_mask_card_number
+
+@pytest.mark.parametrize("card_number, expected", [
+    ("7000792289606361", "7000 79** **** 6361"),
+    ("7158300734726758", "7158 30** **** 6758"),
+    ("1234567812345678", "1234 56** **** 5678"),
+    ("", ""),
+    ("1234", "1234"),
+])
+def test_get_mask_card_number_parametrized(card_number, expected):
+    """араметризованный тест маскирования карт."""
+    result = get_mask_card_number(card_number)
+    assert result == expected
 
 
-def test_card_basic():
-    assert get_mask_card_number("7000792289606361") == "7000 79** **** 6361"
+@pytest.mark.parametrize("account_number, expected", [
+    ("73654108430135874305", "**4305"),
+    ("35383033474447895560", "**5560"),
+    ("12345678901234567890", "**7890"),
+    ("", ""),
+    ("1234", "**1234"),
+])
+def test_get_mask_account_parametrized(account_number, expected):
+    """араметризованный тест маскирования счетов."""
+    result = get_mask_account(account_number)
+    assert result == expected
 
-def test_card_with_spaces():
-    assert get_mask_card_number("7000 7922 8960 6361") == "7000 79** **** 6361"
 
-def test_card_short():
-    assert get_mask_card_number("1234") == "1234"
+def test_get_mask_card_number_with_spaces():
+    """Тест маскирования карты с пробелами."""
+    result = get_mask_card_number("7000 7922 8960 6361")
+    assert result == "7000 79** **** 6361"
 
-def test_card_empty():
-    assert get_mask_card_number("") == ""
 
-def test_account_basic():
-    assert get_mask_account("73654108430135874305") == "**4305"
+def test_get_mask_account_with_spaces():
+    """Тест маскирования счета с пробелами."""
+    result = get_mask_account("7365 4108 4301 3587 4305")
+    assert result == "**4305"
 
-def test_account_with_spaces():
-    assert get_mask_account("7365 4108 4301 3587 4305") == "**4305"
 
-def test_account_short():
-    assert get_mask_account("1234") == "**1234"
+def test_get_mask_card_number_short():
+    """Тест маскирования короткого номера карты."""
+    result = get_mask_card_number("12345")
+    assert result == "12345"
 
-def test_account_empty():
-    assert get_mask_account("") == ""
+
+def test_get_mask_account_short():
+    """Тест маскирования короткого номера счета."""
+    result = get_mask_account("123")
+    assert result == "123"
