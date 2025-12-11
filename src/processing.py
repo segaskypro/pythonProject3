@@ -1,14 +1,17 @@
-# -*- coding: utf-8 -*-
-"""Module for processing bank transactions"""
-
-from typing import List, Dict
+﻿from typing import List, Dict
 
 
-def filter_by_state(transactions: List[Dict], state: str = "EXECUTED") -> List[Dict]:
-    """Filter transactions by state"""
-    return [t for t in transactions if t.get("state") == state]
-
-
-def sort_by_date(transactions: List[Dict], reverse: bool = True) -> List[Dict]:
-    """Sort transactions by date"""
-    return sorted(transactions, key=lambda x: x.get("date", ""), reverse=reverse)
+def sort_by_date(transactions: List[Dict], descending: bool = True) -> List[Dict]:
+    """Сортирует транзакции по дате."""
+    if not transactions:
+        return []
+    
+    valid_transactions = [t for t in transactions if t.get("date")]
+    
+    sorted_transactions = sorted(
+        valid_transactions,
+        key=lambda x: x["date"],
+        reverse=descending
+    )
+    
+    return sorted_transactions
