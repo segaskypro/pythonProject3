@@ -2,6 +2,30 @@
 from src.masks import mask_card_number, mask_account
 
 
+@pytest.fixture
+def sample_card_numbers():
+    """икстура с тестовыми номерами карт."""
+    return [
+        "7000792289606361",
+        "7158300734726758", 
+        "1234567812345678",
+        "",
+        "1234",
+    ]
+
+
+@pytest.fixture
+def sample_account_numbers():
+    """икстура с тестовыми номерами счетов."""
+    return [
+        "73654108430135874305",
+        "35383033474447895560",
+        "12345678901234567890",
+        "",
+        "1234",
+    ]
+
+
 @pytest.mark.parametrize("card_number, expected", [
     ("7000792289606361", "7000 79** **** 6361"),
     ("7158300734726758", "7158 30** **** 6758"),
@@ -10,7 +34,7 @@ from src.masks import mask_card_number, mask_account
     ("1234", "1234"),
 ])
 def test_get_mask_card_number_parametrized(card_number, expected):
-    """Параметризованный тест маскирования карт."""
+    """араметризованный тест маскирования карт."""
     result = mask_card_number(card_number)
     assert result == expected
 
@@ -23,7 +47,7 @@ def test_get_mask_card_number_parametrized(card_number, expected):
     ("1234", "**1234"),
 ])
 def test_get_mask_account_parametrized(account_number, expected):
-    """Параметризованный тест маскирования счетов."""
+    """араметризованный тест маскирования счетов."""
     result = mask_account(account_number)
     assert result == expected
 
