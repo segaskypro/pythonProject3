@@ -1,34 +1,30 @@
 ﻿import json
-import os
 from typing import List, Dict, Any
 
 
-def load_json_data(
-    file_path: str
-) -> List[Dict[str, Any]]:
+def load_json_data(file_path: str) -> List[Dict[str, Any]]:
     """
-    агружает данные из JSON-файла.
+    Загружает данные из JSON-файла.
 
-    сли файл не найден, пустой, содержит не-список или 
+    Если файл не найден, пустой, содержит не-список или
     произошла ошибка декодирования, возвращает пустой список.
 
-    :param file_path: уть к JSON-файлу
-    :return: Список словарей с данными о транзакциях или пустой список
+    :param file_path: Путь к JSON-файлу
+    :return: Список словарей с данными о транзакции или пустой список
     """
-    # роверяем существование файла
-    if not os.path.exists(file_path):
-        return []
-
     try:
-        # ткрываем и читаем файл
+        # Открываем и читаем файл
         with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
 
+    except FileNotFoundError:
+        # Файл не найден
+        return []
     except (json.JSONDecodeError, UnicodeDecodeError):
-        # сли файл поврежден или не в UTF-8
+        # Файл поврежден или не в UTF-8
         return []
 
-    # роверяем, что данные - это список
+    # Проверяем, что данные - это список
     if not isinstance(data, list):
         return []
 
