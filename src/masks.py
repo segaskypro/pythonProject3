@@ -1,7 +1,6 @@
-from logger_config import setup_logger
+﻿from logger_config import setup_logger
 
 logger = setup_logger("masks", "masks.log")
-
 
 
 def mask_card_number(card_number: str) -> str:
