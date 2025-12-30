@@ -1,3 +1,8 @@
+﻿from logger_config import setup_logger
+
+logger = setup_logger("masks", "masks.log")
+
+
 def mask_card_number(card_number: str) -> str:
     """
     Маскирует номер банковской карты.
@@ -13,16 +18,19 @@ def mask_card_number(card_number: str) -> str:
 
     # Проверяем что номер состоит из 16 цифр
     if len(card_str) != 16 or not card_str.isdigit():
+        logger.error(f"Некорректный номер карты: {card_number}")
         return card_str
 
-    return f"{card_str[:4]} {card_str[4:6]}** **** {card_str[-4:]}"
+    result = f"{card_str[:4]} {card_str[4:6]}** **** {card_str[-4:]}"
+    logger.debug(f"Успешная маскировка карты: {card_number} -> {result}")
+    return result
 
 
 def mask_account(account_number: str) -> str:
     """
     Маскирует номер банковского счета.
 
-    Args:cat src/processing.py
+    Args:
         account_number (str): Номер счета
 
     Returns:
@@ -33,6 +41,9 @@ def mask_account(account_number: str) -> str:
 
     # Проверяем что номер достаточно длинный
     if len(account_str) < 4 or not account_str.isdigit():
+        logger.error(f"Некорректный номер счета: {account_number}")
         return account_str
 
-    return f"**{account_str[-4:]}"
+    result = f"**{account_str[-4:]}"
+    logger.debug(f"Успешная маскировка счета: {account_number} -> {result}")
+    return result
