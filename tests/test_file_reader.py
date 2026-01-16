@@ -1,0 +1,118 @@
+﻿"""
+Тесты для модуля чтения CSV и Excel файлов.
+"""
+import unittest
+from unittest.mock import patch, MagicMock
+import pandas as pd
+import sys
+import os
+
+# обавляем родительскую директорию в путь для импорта
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from file_reader import read_csv_transactions, read_excel_transactions
+
+
+class TestCSVReader(unittest.TestCase):
+    """Тесты для функции чтения CSV файлов."""
+    
+    @patch('pandas.read_csv')
+    def test_read_csv_transactions_success(self, mock_read_csv):
+        """Тест успешного чтения CSV файла."""
+        # Создаем mock DataFrame
+        mock_df = pd.DataFrame({
+            'id': [1, 2],
+            'amount': [100.0, 200.0],
+            'description': ['Test 1', 'Test 2']
+        })
+        mock_read_csv.return_value = mock_df
+        
+        # ызываем функцию
+        result = read_csv_transactions('test.csv')
+        
+        # роверяем результаты
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['id'], 1)
+        self.assertEqual(result[1]['amount'], 200.0)
+        mock_read_csv.assert_called_once_with('test.csv', delimiter=';')
+    
+    @patch('pandas.read_csv')
+    def test_read_csv_transactions_empty(self, mock_read_csv):
+        """Тест чтения пустого CSV файла."""
+        mock_read_csv.return_value = pd.DataFrame()
+        
+        result = read_csv_transactions('empty.csv')
+        
+        self.assertEqual(len(result), 0)
+    
+    @patch('pandas.read_csv')
+    def test_read_csv_transactions_error(self, mock_read_csv):
+        """Тест обработки ошибки при чтении CSV."""
+        mock_read_csv.side_effect = Exception("File corrupted")
+        
+        with self.assertRaises(Exception) as context:
+            read_csv_transactions('corrupted.csv')
+        
+        self.assertIn("File corrupted", str(context.exception))
+
+
+class TestExcelReader(unittest.TestCase):
+    """Тесты для функции чтения Excel файлов."""
+    
+    @patch('pandas.read_excel')
+    def test_read_excel_transactions_success(self, mock_read_excel):
+        """Тест успешного чтения Excel файла."""
+        mock_df = pd.DataFrame({
+            'id': [3, 4],
+            'amount': [300.0, 400.0],
+            'currency': ['USD', 'EUR']
+        })
+        mock_read_excel.return_value = mock_df
+        
+        result = read_excel_transactions('test.xlsx')
+        
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['id'], 3)
+        self.assertEqual(result[1]['currency'], 'EUR')
+        mock_read_excel.assert_called_once_with('test.xlsx')
+    
+    @patch('pandas.read_excel')
+    def test_read_excel_transactions_with_mock_data(self, mock_read_excel):
+        """Тест чтения Excel с более сложными данными."""
+        mock_data = [
+            {'id': 100, 'state': 'EXECUTED', 'amount': 1000.0},
+            {'id': 200, 'state': 'PENDING', 'amount': 2000.0}
+        ]
+        mock_df = pd.DataFrame(mock_data)
+        mock_read_excel.return_value = mock_df
+        
+        result = read_excel_transactions('transactions.xlsx')
+        
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['state'], 'EXECUTED')
+        self.assertEqual(result[1]['amount'], 2000.0)
+
+
+class TestIntegration(unittest.TestCase):
+    """нтеграционные тесты."""
+    
+    def test_both_functions_return_same_structure(self):
+        """бе функции должны возвращать одинаковую структуру (список словарей)."""
+        # Тестируем типы возвращаемых значений
+        with patch('pandas.read_csv') as mock_csv, \
+             patch('pandas.read_excel') as mock_excel:
+            
+            mock_csv.return_value = pd.DataFrame({'test': [1]})
+            mock_excel.return_value = pd.DataFrame({'test': [1]})
+            
+            csv_result = read_csv_transactions('dummy.csv')
+            excel_result = read_excel_transactions('dummy.xlsx')
+            
+            self.assertIsInstance(csv_result, list)
+            self.assertIsInstance(excel_result, list)
+            self.assertIsInstance(csv_result[0], dict)
+            self.assertIsInstance(excel_result[0], dict)
+
+
+if __name__ == '__main__':
+    unittest.main()
