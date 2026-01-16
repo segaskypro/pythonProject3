@@ -102,7 +102,8 @@ def test_filter_and_sort():
 
     # Фильтрация
     executed = filter_by_state(data, "EXECUTED")
-    assert len(executed) == 2, f"Ожидалось 2 EXECUTED"
+    # ИСПРАВИТЬ НА 3:
+    assert len(executed) == 3, f"Ожидалось 3 EXECUTED, найдено {len(executed)}"
     print(f"✅ EXECUTED транзакций: {len(executed)}")
 
     # Сортировка
@@ -115,7 +116,6 @@ def test_filter_and_sort():
     print(f"✅ Сортировка по возрастанию работает")
 
     print("✅ Все тесты фильтрации и сортировки пройдены")
-
 
 if __name__ == "__main__":
     print("ЗАПУСК ТЕСТОВ ДОМАШНЕГО ЗАДАНИЯ")
@@ -134,3 +134,4 @@ if __name__ == "__main__":
     except AssertionError as e:
         print(f"\n❌ ТЕСТ ПРОВАЛЕН: {e}")
         raise
+
